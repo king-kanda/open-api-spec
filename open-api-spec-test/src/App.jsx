@@ -20,6 +20,9 @@ export default function App() {
 
   return (
     <div>
+      <h1 className="text-3xl font-bold underline text-red-500" >
+      Hello world!
+      </h1>
       <h1>OpenAPI Spec Viewer</h1>
       <p>Upload an OpenAPI spec file to view its details.</p>
       
