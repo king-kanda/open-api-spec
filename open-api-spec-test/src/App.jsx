@@ -4,8 +4,8 @@ export default function App() {
   const [apiSpec, setApiSpec] = useState(null);
   const [error, setError] = useState("");
 
-  const handleFileUpload = async (event) => {
-    const file = event.target.files[0];
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
     if (file) {
       try {
         const fileContent = await file.text();
@@ -13,7 +13,7 @@ export default function App() {
         setApiSpec(parsedSpec);
         setError(""); // Reset error if parsing succeeds
       } catch (err) {
-        setError("Invalid JSON file. Please upload a valid OpenAPI spec.");
+        setError("Invalid JSON file. Please upload a valid OpenAPI spec."  + err);
       }
     }
   };
