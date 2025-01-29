@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://example.com/service"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             targetNamespace="http://example.com/service">
+
+    <!-- Types: Defines complex data types used in the service -->
+    <types>
+        <xsd:schema targetNamespace="http://example.com/service">
+            <xsd:element name="SayHelloRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="name" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="SayHelloResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="message" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </types>
+
+    <!-- Messages: Defines request and response messages -->
+    <message name="SayHelloRequest">
+        <part name="parameters" element="tns:SayHelloRequest"/>
+    </message>
+    <message name="SayHelloResponse">
+        <part name="parameters" element="tns:SayHelloResponse"/>
+    </message>
+
+    <!-- PortType: Defines the service operations -->
+    <portType name="HelloServicePortType">
+        <operation name="SayHello">
+            <input message="tns:SayHelloRequest"/>
+            <output message="tns:SayHelloResponse"/>
+        </operation>
+    </portType>
+
+    <!-- Binding: Specifies the SOAP protocol details -->
+    <binding name="HelloServiceBinding" type="tns:HelloServicePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="SayHello">
+            <soap:operation soapAction="http://example.com/service/SayHello"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <!-- Service: Defines where the service is hosted -->
+    <service name="HelloService">
+        <port name="HelloServicePort" binding="tns:HelloServiceBinding">
+            <soap:address location="http://example.com/hello"/>
+        </port>
+    </service>
+
+</definitions>

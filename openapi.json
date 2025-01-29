@@ -1,124 +1,265 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-      "title": "Simple API",
-      "description": "A simple example API for demonstration purposes.",
-      "version": "1.0.0"
-    },
-    "servers": [
-      {
-        "url": "https://api.example.com/v1",
-        "description": "Production server"
-      }
-    ],
-    "paths": {
-      "/users": {
-        "get": {
-          "summary": "Retrieve a list of users",
-          "description": "Returns a list of all users in the system.",
-          "responses": {
-            "200": {
-              "description": "A list of users",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "integer",
-                          "example": 1
-                        },
-                        "name": {
-                          "type": "string",
-                          "example": "John Doe"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
+  "openapi": "3.1.0",
+  "info": { "title": "FastAPI", "version": "0.1.0" },
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Index",
+        "operationId": "index__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
           }
-        },
-        "post": {
-          "summary": "Create a new user",
-          "description": "Adds a new user to the system.",
-          "requestBody": {
-            "description": "User details to create",
+        }
+      }
+    },
+    "/students": {
+      "get": {
+        "summary": "Get Students",
+        "operationId": "get_students_students_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
+          }
+        }
+      }
+    },
+    "/students/{student_id}": {
+      "get": {
+        "summary": "Get Student",
+        "operationId": "get_student_students__student_id__get",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
             "required": true,
+            "schema": {
+              "type": "integer",
+              "exclusiveMaximum": 5,
+              "exclusiveMinimum": 0,
+              "description": "The ID of the student you want to view",
+              "title": "Student Id"
+            },
+            "description": "The ID of the student you want to view"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
+          },
+          "422": {
+            "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string",
-                      "example": "Jane Doe"
-                    },
-                    "email": {
-                      "type": "string",
-                      "format": "email",
-                      "example": "jane.doe@example.com"
-                    }
-                  }
-                }
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
-            }
-          },
-          "responses": {
-            "201": {
-              "description": "User created successfully"
             }
           }
         }
-      },
-      "/users/{id}": {
-        "get": {
-          "summary": "Retrieve a user by ID",
-          "description": "Returns details of a single user.",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "path",
-              "required": true,
-              "description": "ID of the user to retrieve",
-              "schema": {
-                "type": "integer",
-                "example": 1
+      }
+    },
+    "/get-by-name": {
+      "get": {
+        "summary": "Get Student",
+        "operationId": "get_student_get_by_name_get",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [{ "type": "string" }, { "type": "null" }],
+              "title": "Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "User details",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "name": {
-                        "type": "string",
-                        "example": "John Doe"
-                      },
-                      "email": {
-                        "type": "string",
-                        "format": "email",
-                        "example": "john.doe@example.com"
-                      }
-                    }
-                  }
-                }
+          }
+        }
+      }
+    },
+    "/get-by-name/{student_id}": {
+      "get": {
+        "summary": "Get Student",
+        "operationId": "get_student_get_by_name__student_id__get",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "title": "Student Id" }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "title": "Name" }
+          },
+          {
+            "name": "test",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "title": "Test" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/create-student/{student_id}": {
+      "post": {
+        "summary": "Create Student",
+        "operationId": "create_student_create_student__student_id__post",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "title": "Student Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Student" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/update-student/{student_id}": {
+      "put": {
+        "summary": "Update Student",
+        "operationId": "update_student_update_student__student_id__put",
+        "parameters": [
+          {
+            "name": "student_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "title": "Student Id" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateStudent" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
           }
         }
       }
     }
+  },
+  "components": {
+    "schemas": {
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": { "$ref": "#/components/schemas/ValidationError" },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Student": {
+        "properties": {
+          "name": { "type": "string", "title": "Name" },
+          "age": { "type": "integer", "title": "Age" },
+          "subject": { "type": "string", "title": "Subject" }
+        },
+        "type": "object",
+        "required": ["name", "age", "subject"],
+        "title": "Student"
+      },
+      "UpdateStudent": {
+        "properties": {
+          "name": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Name"
+          },
+          "age": {
+            "anyOf": [{ "type": "integer" }, { "type": "null" }],
+            "title": "Age"
+          },
+          "subject": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Subject"
+          }
+        },
+        "type": "object",
+        "title": "UpdateStudent"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": { "anyOf": [{ "type": "string" }, { "type": "integer" }] },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": { "type": "string", "title": "Message" },
+          "type": { "type": "string", "title": "Error Type" }
+        },
+        "type": "object",
+        "required": ["loc", "msg", "type"],
+        "title": "ValidationError"
+      }
+    }
   }
-  
+}
