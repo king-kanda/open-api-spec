@@ -1,51 +1,187 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
              xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-             xmlns:tns="http://example.com/service"
+             xmlns:tns="http://orderservice.example.com/"
              xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-             targetNamespace="http://example.com/service">
+             targetNamespace="http://orderservice.example.com/"
+             name="OrderManagementService">
 
-    <!-- Types: Defines complex data types used in the service -->
+    <!-- Types Section -->
     <types>
-        <xsd:schema targetNamespace="http://example.com/service">
-            <xsd:element name="SayHelloRequest">
+        <xsd:schema targetNamespace="http://orderservice.example.com/">
+            <!-- Order Type -->
+            <xsd:complexType name="Order">
+                <xsd:sequence>
+                    <xsd:element name="orderId" type="xsd:string"/>
+                    <xsd:element name="customerId" type="xsd:string"/>
+                    <xsd:element name="orderDate" type="xsd:dateTime"/>
+                    <xsd:element name="totalAmount" type="xsd:decimal"/>
+                    <xsd:element name="status" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <!-- Customer Type -->
+            <xsd:complexType name="Customer">
+                <xsd:sequence>
+                    <xsd:element name="customerId" type="xsd:string"/>
+                    <xsd:element name="name" type="xsd:string"/>
+                    <xsd:element name="email" type="xsd:string"/>
+                    <xsd:element name="address" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <!-- Request/Response Elements -->
+            <xsd:element name="CreateOrderRequest">
                 <xsd:complexType>
                     <xsd:sequence>
-                        <xsd:element name="name" type="xsd:string"/>
+                        <xsd:element name="order" type="tns:Order"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
-            <xsd:element name="SayHelloResponse">
+
+            <xsd:element name="CreateOrderResponse">
                 <xsd:complexType>
                     <xsd:sequence>
+                        <xsd:element name="orderId" type="xsd:string"/>
+                        <xsd:element name="status" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="GetOrderRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="orderId" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="GetOrderResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="order" type="tns:Order"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="UpdateOrderStatusRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="orderId" type="xsd:string"/>
+                        <xsd:element name="newStatus" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="UpdateOrderStatusResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="success" type="xsd:boolean"/>
                         <xsd:element name="message" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="GetCustomerOrdersRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="customerId" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="GetCustomerOrdersResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="orders" type="tns:Order" maxOccurs="unbounded"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
         </xsd:schema>
     </types>
 
-    <!-- Messages: Defines request and response messages -->
-    <message name="SayHelloRequest">
-        <part name="parameters" element="tns:SayHelloRequest"/>
+    <!-- Messages -->
+    <message name="CreateOrderInput">
+        <part name="parameters" element="tns:CreateOrderRequest"/>
     </message>
-    <message name="SayHelloResponse">
-        <part name="parameters" element="tns:SayHelloResponse"/>
+    <message name="CreateOrderOutput">
+        <part name="parameters" element="tns:CreateOrderResponse"/>
+    </message>
+    <message name="GetOrderInput">
+        <part name="parameters" element="tns:GetOrderRequest"/>
+    </message>
+    <message name="GetOrderOutput">
+        <part name="parameters" element="tns:GetOrderResponse"/>
+    </message>
+    <message name="UpdateOrderStatusInput">
+        <part name="parameters" element="tns:UpdateOrderStatusRequest"/>
+    </message>
+    <message name="UpdateOrderStatusOutput">
+        <part name="parameters" element="tns:UpdateOrderStatusResponse"/>
+    </message>
+    <message name="GetCustomerOrdersInput">
+        <part name="parameters" element="tns:GetCustomerOrdersRequest"/>
+    </message>
+    <message name="GetCustomerOrdersOutput">
+        <part name="parameters" element="tns:GetCustomerOrdersResponse"/>
     </message>
 
-    <!-- PortType: Defines the service operations -->
-    <portType name="HelloServicePortType">
-        <operation name="SayHello">
-            <input message="tns:SayHelloRequest"/>
-            <output message="tns:SayHelloResponse"/>
+    <!-- Port Type -->
+    <portType name="OrderServicePortType">
+        <operation name="CreateOrder">
+            <input message="tns:CreateOrderInput"/>
+            <output message="tns:CreateOrderOutput"/>
+        </operation>
+        <operation name="GetOrder">
+            <input message="tns:GetOrderInput"/>
+            <output message="tns:GetOrderOutput"/>
+        </operation>
+        <operation name="UpdateOrderStatus">
+            <input message="tns:UpdateOrderStatusInput"/>
+            <output message="tns:UpdateOrderStatusOutput"/>
+        </operation>
+        <operation name="GetCustomerOrders">
+            <input message="tns:GetCustomerOrdersInput"/>
+            <output message="tns:GetCustomerOrdersOutput"/>
         </operation>
     </portType>
 
-    <!-- Binding: Specifies the SOAP protocol details -->
-    <binding name="HelloServiceBinding" type="tns:HelloServicePortType">
+    <!-- Bindings -->
+    <binding name="OrderServiceSoapBinding" type="tns:OrderServicePortType">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
-        <operation name="SayHello">
-            <soap:operation soapAction="http://example.com/service/SayHello"/>
+        
+        <operation name="CreateOrder">
+            <soap:operation soapAction="http://orderservice.example.com/CreateOrder"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+
+        <operation name="GetOrder">
+            <soap:operation soapAction="http://orderservice.example.com/GetOrder"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+
+        <operation name="UpdateOrderStatus">
+            <soap:operation soapAction="http://orderservice.example.com/UpdateOrderStatus"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+
+        <operation name="GetCustomerOrders">
+            <soap:operation soapAction="http://orderservice.example.com/GetCustomerOrders"/>
             <input>
                 <soap:body use="literal"/>
             </input>
@@ -55,10 +191,10 @@
         </operation>
     </binding>
 
-    <!-- Service: Defines where the service is hosted -->
-    <service name="HelloService">
-        <port name="HelloServicePort" binding="tns:HelloServiceBinding">
-            <soap:address location="http://example.com/hello"/>
+    <!-- Service -->
+    <service name="OrderManagementService">
+        <port name="OrderServicePort" binding="tns:OrderServiceSoapBinding">
+            <soap:address location="https://api.example.com/orders/v1"/>
         </port>
     </service>
 
